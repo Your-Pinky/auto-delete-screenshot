@@ -108,8 +108,17 @@ Output: `bin/Release/net8.0-windows/win-x64/publish/AutoDeleteScreenshot.exe`
 
 ## Author
 
-**TungCorn**
-
-- [GitHub](https://github.com/TungCorn)
-- **Email:** `tungcorn05@gmail.com`
-- **Telegram:** [@corn05](https://t.me/corn05)
+<div align="center">
+  <h3>TungCorn</h3>
+  <p>
+    <a href="https://github.com/TungCorn" target="_blank">
+      <img src="https://img.shields.io/badge/GitHub-TungCorn-181717?style=for-the-badge&logo=github" alt="GitHub"/>
+    </a>
+    <a href="mailto:tungcorn05@gmail.com" target="_blank">
+      <img src="https://img.shields.io/badge/Email-tungcorn05%40gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/>
+    </a>
+    <a href="https://t.me/corn05" target="_blank">
+      <img src="https://img.shields.io/badge/Telegram-@corn05-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram"/>
+    </a>
+  </p>
+</div>
