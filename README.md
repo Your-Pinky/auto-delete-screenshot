@@ -119,5 +119,5 @@ Output: `bin/Release/net8.0-windows/win-x64/publish/AutoDeleteScreenshot.exe`
     <img src="https://img.shields.io/badge/Telegram-@corn05-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram"/>
   </a>
 
-  <p>📧 <b>tungcorn05@gmail.com</b></p>
+  <p>💌 <b>tungcorn05@gmail.com</b></p>
 </div>
