@@ -9,6 +9,7 @@ public class TrayApplicationContext : ApplicationContext
 {
     private readonly NotifyIcon _trayIcon;
     private readonly ContextMenuStrip _contextMenu;
+    private readonly ScreenshotWatcher _screenshotWatcher;
     
     // Menu items cho thời gian xóa
     private readonly ToolStripMenuItem _menuNoDelete;
@@ -86,6 +87,38 @@ public class TrayApplicationContext : ApplicationContext
         };
         
         UpdateMenuCheckmarks();
+        
+        // Khởi tạo ScreenshotWatcher
+        _screenshotWatcher = new ScreenshotWatcher(
+            () => _deleteAfterMinutes,
+            OnNewScreenshot
+        );
+    }
+    
+    /// <summary>
+    /// Xử lý khi có ảnh chụp mới
+    /// </summary>
+    private void OnNewScreenshot(string fileName)
+    {
+        if (_showToast)
+        {
+            string timeText = _deleteAfterMinutes switch
+            {
+                15 => "15 phút",
+                30 => "30 phút",
+                60 => "1 giờ",
+                1440 => "24 giờ",
+                _ => $"{_deleteAfterMinutes} phút"
+            };
+            
+            // Hiện balloon tip thay vì toast để đơn giản hơn
+            _trayIcon.ShowBalloonTip(
+                3000,
+                "📷 Auto Delete Screenshot",
+                $"Ảnh sẽ tự xóa sau {timeText}",
+                ToolTipIcon.Info
+            );
+        }
     }
 
     /// <summary>
@@ -206,6 +239,7 @@ public class TrayApplicationContext : ApplicationContext
     {
         if (disposing)
         {
+            _screenshotWatcher?.Dispose();
             _trayIcon?.Dispose();
             _contextMenu?.Dispose();
         }
