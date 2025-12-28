@@ -22,7 +22,7 @@ public class TrayApplicationContext : ApplicationContext
     private readonly ToolStripMenuItem _menuShowToast;
     
     // Current deletion time (minutes), 0 = no delete
-    private int _deleteAfterMinutes = 30;
+    private int _deleteAfterMinutes = 0;
     private bool _showToast = false;
 
     public TrayApplicationContext()
@@ -53,9 +53,9 @@ public class TrayApplicationContext : ApplicationContext
         _contextMenu.Items.Add(new ToolStripSeparator());
         
         // Time options
-        _menuNoDelete = new ToolStripMenuItem("No auto-delete", null, OnDeleteTimeChanged) { Tag = 0 };
+        _menuNoDelete = new ToolStripMenuItem("No auto-delete", null, OnDeleteTimeChanged) { Tag = 0, Checked = true };
         _menu15Min = new ToolStripMenuItem("15 minutes", null, OnDeleteTimeChanged) { Tag = 15 };
-        _menu30Min = new ToolStripMenuItem("30 minutes", null, OnDeleteTimeChanged) { Tag = 30, Checked = true };
+        _menu30Min = new ToolStripMenuItem("30 minutes", null, OnDeleteTimeChanged) { Tag = 30 };
         _menu1Hour = new ToolStripMenuItem("1 hour", null, OnDeleteTimeChanged) { Tag = 60 };
         _menu24Hours = new ToolStripMenuItem("24 hours", null, OnDeleteTimeChanged) { Tag = 1440 };
         
@@ -99,7 +99,7 @@ public class TrayApplicationContext : ApplicationContext
         _trayIcon = new NotifyIcon
         {
             Icon = LoadIcon(),
-            Text = "Auto Delete Screenshot - 30 min",
+            Text = "Auto Delete Screenshot - No auto-delete",
             Visible = true,
             ContextMenuStrip = _contextMenu
         };

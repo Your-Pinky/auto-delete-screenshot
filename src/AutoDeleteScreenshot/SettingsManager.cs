@@ -15,7 +15,7 @@ public class SettingsManager
     /// </summary>
     public class AppSettings
     {
-        public int DeleteAfterMinutes { get; set; } = 30;
+        public int DeleteAfterMinutes { get; set; } = 0;
         public bool ShowToast { get; set; } = false;
         public string? ScreenshotsPath { get; set; } = null;
     }
