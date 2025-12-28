@@ -10,6 +10,7 @@ public class TrayApplicationContext : ApplicationContext
     private readonly NotifyIcon _trayIcon;
     private readonly ContextMenuStrip _contextMenu;
     private readonly ScreenshotWatcher _screenshotWatcher;
+    private readonly FileCleanupService _fileCleanupService;
     
     // Menu items cho thời gian xóa
     private readonly ToolStripMenuItem _menuNoDelete;
@@ -93,6 +94,9 @@ public class TrayApplicationContext : ApplicationContext
             () => _deleteAfterMinutes,
             OnNewScreenshot
         );
+        
+        // Khởi tạo FileCleanupService - quét mỗi 60 giây
+        _fileCleanupService = new FileCleanupService(60);
     }
     
     /// <summary>
@@ -239,6 +243,7 @@ public class TrayApplicationContext : ApplicationContext
     {
         if (disposing)
         {
+            _fileCleanupService?.Dispose();
             _screenshotWatcher?.Dispose();
             _trayIcon?.Dispose();
             _contextMenu?.Dispose();
