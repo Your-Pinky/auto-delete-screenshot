@@ -1,7 +1,7 @@
 namespace AutoDeleteScreenshot;
 
 /// <summary>
-/// Theo dõi thư mục Screenshots và gắn tag thời gian xóa vào file mới
+/// Monitor Screenshots folder and append delete timestamp tag to new files
 /// </summary>
 public class ScreenshotWatcher : IDisposable
 {
@@ -14,20 +14,20 @@ public class ScreenshotWatcher : IDisposable
     private const string DELETE_TAG_PREFIX = "_AUTODEL_";
 
     /// <summary>
-    /// Khởi tạo ScreenshotWatcher
+    /// Initialize ScreenshotWatcher
     /// </summary>
-    /// <param name="getDeleteAfterMinutes">Callback lấy thời gian xóa hiện tại (phút)</param>
-    /// <param name="onNewScreenshot">Callback khi có ảnh mới (tên file mới)</param>
+    /// <param name="getDeleteAfterMinutes">Callback to get current delete time (minutes)</param>
+    /// <param name="onNewScreenshot">Callback when new screenshot detected (new file name)</param>
     public ScreenshotWatcher(Func<int> getDeleteAfterMinutes, Action<string>? onNewScreenshot = null)
     {
         _getDeleteAfterMinutes = getDeleteAfterMinutes;
         _onNewScreenshot = onNewScreenshot;
 
-        // Đường dẫn thư mục Screenshots chính xác từ Registry
+        // Exact Screenshots folder path from Registry
         string screenshotsPath = PathHelper.GetScreenshotsPath();
         System.Diagnostics.Debug.WriteLine($"Watching screenshots path: {screenshotsPath}");
 
-        // Đảm bảo thư mục tồn tại
+        // Ensure directory exists
         if (!Directory.Exists(screenshotsPath))
         {
             Directory.CreateDirectory(screenshotsPath);
@@ -44,32 +44,32 @@ public class ScreenshotWatcher : IDisposable
     }
 
     /// <summary>
-    /// Xử lý khi có file mới được tạo
+    /// Handle new file created event
     /// </summary>
     private void OnFileCreated(object sender, FileSystemEventArgs e)
     {
         try
         {
-            // Bỏ qua nếu file đã có tag xóa
+            // Skip if file already has delete tag
             if (e.Name?.Contains(DELETE_TAG_PREFIX) == true)
                 return;
 
             int deleteAfterMinutes = _getDeleteAfterMinutes();
             
-            // Bỏ qua nếu không xóa tự động
+            // Skip if auto-delete is disabled
             if (deleteAfterMinutes <= 0)
                 return;
 
-            // Đợi file được ghi xong (Windows có thể đang ghi)
+            // Wait for file write completion (Windows might be writing)
             Thread.Sleep(500);
 
             if (!File.Exists(e.FullPath))
                 return;
 
-            // Tính thời gian xóa (Unix timestamp)
+            // Calculate delete time (Unix timestamp)
             long deleteTimestamp = DateTimeOffset.UtcNow.AddMinutes(deleteAfterMinutes).ToUnixTimeSeconds();
 
-            // Tạo tên file mới với tag
+            // Create new file name with tag
             string directory = Path.GetDirectoryName(e.FullPath) ?? "";
             string fileName = Path.GetFileNameWithoutExtension(e.FullPath);
             string extension = Path.GetExtension(e.FullPath);
@@ -79,21 +79,21 @@ public class ScreenshotWatcher : IDisposable
             // Rename file
             File.Move(e.FullPath, newFilePath);
 
-            // Gọi callback
+            // Invoke callback
             _onNewScreenshot?.Invoke(newFileName);
         }
         catch (Exception ex)
         {
-            // Log lỗi nhưng không crash ứng dụng
+            // Log error but do not crash application
             System.Diagnostics.Debug.WriteLine($"ScreenshotWatcher error: {ex.Message}");
         }
     }
 
     /// <summary>
-    /// Kiểm tra xem file có tag xóa không và trả về thời gian xóa
+    /// Check if file has delete tag and return delete timestamp
     /// </summary>
-    /// <param name="fileName">Tên file</param>
-    /// <returns>Unix timestamp để xóa, hoặc null nếu không có tag</returns>
+    /// <param name="fileName">File name</param>
+    /// <returns>Unix timestamp for deletion, or null if no tag</returns>
     public static long? GetDeleteTimestamp(string fileName)
     {
         int tagIndex = fileName.IndexOf(DELETE_TAG_PREFIX);
@@ -102,7 +102,7 @@ public class ScreenshotWatcher : IDisposable
 
         string timestampStr = fileName.Substring(tagIndex + DELETE_TAG_PREFIX.Length);
         
-        // Loại bỏ extension nếu có
+        // Remove extension if exists
         int dotIndex = timestampStr.IndexOf('.');
         if (dotIndex >= 0)
             timestampStr = timestampStr.Substring(0, dotIndex);
@@ -114,7 +114,7 @@ public class ScreenshotWatcher : IDisposable
     }
 
     /// <summary>
-    /// Dừng theo dõi
+    /// Stop monitoring
     /// </summary>
     public void Stop()
     {
@@ -122,7 +122,7 @@ public class ScreenshotWatcher : IDisposable
     }
 
     /// <summary>
-    /// Bắt đầu theo dõi
+    /// Start monitoring
     /// </summary>
     public void Start()
     {

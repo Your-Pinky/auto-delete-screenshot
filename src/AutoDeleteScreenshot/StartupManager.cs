@@ -3,7 +3,7 @@ using Microsoft.Win32;
 namespace AutoDeleteScreenshot;
 
 /// <summary>
-/// Quản lý khởi động cùng Windows qua Registry
+/// Manage Windows startup via Registry
 /// </summary>
 public static class StartupManager
 {
@@ -11,7 +11,7 @@ public static class StartupManager
     private const string RegistryKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
 
     /// <summary>
-    /// Kiểm tra xem app có được cấu hình khởi động cùng Windows không
+    /// Check if app is configured to run at Windows startup
     /// </summary>
     public static bool IsEnabled()
     {
@@ -27,7 +27,7 @@ public static class StartupManager
     }
 
     /// <summary>
-    /// Bật khởi động cùng Windows
+    /// Enable Windows startup
     /// </summary>
     public static bool Enable()
     {
@@ -48,7 +48,7 @@ public static class StartupManager
     }
 
     /// <summary>
-    /// Tắt khởi động cùng Windows
+    /// Disable Windows startup
     /// </summary>
     public static bool Disable()
     {
@@ -67,7 +67,7 @@ public static class StartupManager
     }
 
     /// <summary>
-    /// Toggle trạng thái khởi động cùng Windows
+    /// Toggle Windows startup status
     /// </summary>
     public static bool Toggle()
     {

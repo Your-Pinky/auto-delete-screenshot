@@ -3,7 +3,7 @@ using System.Text.Json;
 namespace AutoDeleteScreenshot;
 
 /// <summary>
-/// Quản lý lưu/load settings từ file JSON
+/// Manage saving/loading settings from JSON file
 /// </summary>
 public class SettingsManager
 {
@@ -22,11 +22,11 @@ public class SettingsManager
 
     public SettingsManager()
     {
-        // Lưu settings vào AppData
+        // Save settings to AppData
         string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         string appFolder = Path.Combine(appDataPath, "AutoDeleteScreenshot");
         
-        // Tạo thư mục nếu chưa có
+        // Create directory if not exists
         if (!Directory.Exists(appFolder))
         {
             Directory.CreateDirectory(appFolder);
@@ -37,7 +37,7 @@ public class SettingsManager
     }
 
     /// <summary>
-    /// Load settings từ file JSON
+    /// Load settings from JSON file
     /// </summary>
     private AppSettings Load()
     {
@@ -59,7 +59,7 @@ public class SettingsManager
     }
 
     /// <summary>
-    /// Lưu settings vào file JSON
+    /// Save settings to JSON file
     /// </summary>
     public void Save()
     {
@@ -76,7 +76,7 @@ public class SettingsManager
     }
 
     /// <summary>
-    /// Thời gian xóa (phút)
+    /// Delete time (minutes)
     /// </summary>
     public int DeleteAfterMinutes
     {
@@ -89,7 +89,7 @@ public class SettingsManager
     }
 
     /// <summary>
-    /// Có hiện toast không
+    /// Is toast enabled
     /// </summary>
     public bool ShowToast
     {
@@ -102,7 +102,7 @@ public class SettingsManager
     }
 
     /// <summary>
-    /// Đường dẫn thư mục Screenshots tùy chỉnh
+    /// Custom Screenshots folder path
     /// </summary>
     public string? ScreenshotsPath
     {
@@ -115,7 +115,7 @@ public class SettingsManager
     }
 
     /// <summary>
-    /// Kiểm tra xem đã có path được cấu hình chưa
+    /// Check if path is configured
     /// </summary>
     public bool HasScreenshotsPath => !string.IsNullOrEmpty(_settings.ScreenshotsPath) && Directory.Exists(_settings.ScreenshotsPath);
 }

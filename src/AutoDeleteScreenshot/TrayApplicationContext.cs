@@ -3,7 +3,7 @@ using System.Drawing;
 namespace AutoDeleteScreenshot;
 
 /// <summary>
-/// ApplicationContext để quản lý System Tray icon và menu
+/// ApplicationContext to manage System Tray icon and menu
 /// </summary>
 public class TrayApplicationContext : ApplicationContext
 {
@@ -13,7 +13,7 @@ public class TrayApplicationContext : ApplicationContext
     private readonly FileCleanupService _fileCleanupService;
     private readonly SettingsManager _settingsManager;
     
-    // Menu items cho thời gian xóa
+    // Menu items for deletion time
     private readonly ToolStripMenuItem _menuNoDelete;
     private readonly ToolStripMenuItem _menu15Min;
     private readonly ToolStripMenuItem _menu30Min;
@@ -21,27 +21,27 @@ public class TrayApplicationContext : ApplicationContext
     private readonly ToolStripMenuItem _menu24Hours;
     private readonly ToolStripMenuItem _menuShowToast;
     
-    // Thời gian xóa hiện tại (phút), 0 = không xóa
+    // Current deletion time (minutes), 0 = no delete
     private int _deleteAfterMinutes = 30;
     private bool _showToast = false;
 
     public TrayApplicationContext()
     {
-        // Load settings từ file
+        // Load settings from file
         _settingsManager = new SettingsManager();
         _deleteAfterMinutes = _settingsManager.DeleteAfterMinutes;
         _showToast = _settingsManager.ShowToast;
         
-        // Khởi tạo PathHelper với settings
+        // Initialize PathHelper with settings
         PathHelper.Initialize(_settingsManager);
         
-        // Kiểm tra xem đã có folder chưa, nếu chưa thì yêu cầu chọn
+        // Check if folder is selected, if not prompt to select
         if (!_settingsManager.HasScreenshotsPath)
         {
             PromptForScreenshotsFolder();
         }
         
-        // Tạo context menu
+        // Create context menu
         _contextMenu = new ContextMenuStrip();
         
         // Header
@@ -95,7 +95,7 @@ public class TrayApplicationContext : ApplicationContext
         var exitItem = new ToolStripMenuItem("❌ Exit", null, OnExit);
         _contextMenu.Items.Add(exitItem);
         
-        // Tạo tray icon
+        // Create tray icon
         _trayIcon = new NotifyIcon
         {
             Icon = LoadIcon(),
@@ -104,12 +104,12 @@ public class TrayApplicationContext : ApplicationContext
             ContextMenuStrip = _contextMenu
         };
         
-        // Double click để mở menu
+        // Double click to open menu
         _trayIcon.MouseClick += (s, e) =>
         {
             if (e.Button == MouseButtons.Left)
             {
-                // Hiện menu khi click trái
+                // Show menu on left click
                 var mi = typeof(NotifyIcon).GetMethod("ShowContextMenu", 
                     System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
                 mi?.Invoke(_trayIcon, null);
@@ -118,18 +118,18 @@ public class TrayApplicationContext : ApplicationContext
         
         UpdateMenuCheckmarks();
         
-        // Khởi tạo ScreenshotWatcher
+        // Initialize ScreenshotWatcher
         _screenshotWatcher = new ScreenshotWatcher(
             () => _deleteAfterMinutes,
             OnNewScreenshot
         );
         
-        // Khởi tạo FileCleanupService - quét mỗi 60 giây
+        // Initialize FileCleanupService - scan every 60 seconds
         _fileCleanupService = new FileCleanupService(60);
     }
     
     /// <summary>
-    /// Xử lý khi có ảnh chụp mới
+    /// Handle new screenshot event
     /// </summary>
     private void OnNewScreenshot(string fileName)
     {
@@ -155,7 +155,7 @@ public class TrayApplicationContext : ApplicationContext
     }
 
     /// <summary>
-    /// Load icon từ file hoặc tạo icon mặc định
+    /// Load icon from file or create default
     /// </summary>
     private Icon LoadIcon()
     {
@@ -170,12 +170,12 @@ public class TrayApplicationContext : ApplicationContext
         }
         catch { }
         
-        // Tạo icon mặc định nếu không load được
+        // Create default icon if loading fails
         return CreateDefaultIcon();
     }
 
     /// <summary>
-    /// Tạo icon mặc định màu xanh
+    /// Create default blue icon
     /// </summary>
     private Icon CreateDefaultIcon()
     {
@@ -193,7 +193,7 @@ public class TrayApplicationContext : ApplicationContext
     }
 
     /// <summary>
-    /// Xử lý khi thay đổi thời gian xóa
+    /// Handle delete time change
     /// </summary>
     private void OnDeleteTimeChanged(object? sender, EventArgs e)
     {
@@ -203,23 +203,23 @@ public class TrayApplicationContext : ApplicationContext
             UpdateMenuCheckmarks();
             UpdateTooltip();
             
-            // Lưu setting
+            // Save setting
             _settingsManager.DeleteAfterMinutes = minutes;
         }
     }
 
     /// <summary>
-    /// Xử lý khi bật/tắt toast
+    /// Handle toast toggle
     /// </summary>
     private void OnShowToastChanged(object? sender, EventArgs e)
     {
         _showToast = _menuShowToast.Checked;
-        // Lưu setting
+        // Save setting
         _settingsManager.ShowToast = _showToast;
     }
 
     /// <summary>
-    /// Xử lý khi click menu chọn folder
+    /// Handle select folder menu click
     /// </summary>
     private void OnSelectFolder(object? sender, EventArgs e)
     {
@@ -227,7 +227,7 @@ public class TrayApplicationContext : ApplicationContext
     }
 
     /// <summary>
-    /// Xử lý khi thay đổi cài đặt khởi động cùng Windows
+    /// Handle startup setting change
     /// </summary>
     private void OnStartupChanged(object? sender, EventArgs e)
     {
@@ -365,17 +365,17 @@ public class TrayApplicationContext : ApplicationContext
     }
 
     /// <summary>
-    /// Lấy thời gian xóa hiện tại
+    /// Get current deletion time
     /// </summary>
     public int DeleteAfterMinutes => _deleteAfterMinutes;
 
     /// <summary>
-    /// Có hiện toast không
+    /// Is toast enabled
     /// </summary>
     public bool ShowToast => _showToast;
 
     /// <summary>
-    /// Cleanup khi đóng ứng dụng
+    /// Cleanup on application exit
     /// </summary>
     protected override void Dispose(bool disposing)
     {

@@ -4,7 +4,7 @@ using Timer = System.Timers.Timer;
 namespace AutoDeleteScreenshot;
 
 /// <summary>
-/// Service quét và xóa các file ảnh đã hết hạn
+/// Service to scan and delete expired screenshot files
 /// </summary>
 public class FileCleanupService : IDisposable
 {
@@ -16,15 +16,15 @@ public class FileCleanupService : IDisposable
     private const string DELETE_TAG_PREFIX = "_AUTODEL_";
 
     /// <summary>
-    /// Khởi tạo FileCleanupService
+    /// Initialize FileCleanupService
     /// </summary>
-    /// <param name="intervalSeconds">Khoảng thời gian quét (giây), mặc định 60 giây</param>
+    /// <param name="intervalSeconds">Scan interval (seconds), default 60 seconds</param>
     public FileCleanupService(int intervalSeconds = 60)
     {
         _screenshotsPath = PathHelper.GetScreenshotsPath();
         System.Diagnostics.Debug.WriteLine($"Watching cleanup path: {_screenshotsPath}");
 
-        // Tạo timer quét định kỳ
+        // Create periodic scan timer
         _cleanupTimer = new Timer(intervalSeconds * 1000)
         {
             AutoReset = true,
@@ -32,12 +32,12 @@ public class FileCleanupService : IDisposable
         };
         _cleanupTimer.Elapsed += OnCleanupTimerElapsed;
 
-        // Quét ngay lập tức khi khởi động
+        // Scan immediately on startup
         Task.Run(CleanupExpiredFiles);
     }
 
     /// <summary>
-    /// Xử lý khi timer tick
+    /// Handle timer tick
     /// </summary>
     private void OnCleanupTimerElapsed(object? sender, ElapsedEventArgs e)
     {
@@ -45,7 +45,7 @@ public class FileCleanupService : IDisposable
     }
 
     /// <summary>
-    /// Quét và xóa các file đã hết hạn
+    /// Scan and delete expired files
     /// </summary>
     private void CleanupExpiredFiles()
     {
@@ -56,7 +56,7 @@ public class FileCleanupService : IDisposable
 
             long currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-            // CHỈ lấy các file có tag xóa -> TỐI ƯU HIỆU SUẤT
+            // ONLY get files with delete tag -> PERFORMANCE OPTIMIZATION
             // Pattern: *{DELETE_TAG_PREFIX}*.png
             string searchPattern = $"*{DELETE_TAG_PREFIX}*.png";
             var files = Directory.GetFiles(_screenshotsPath, searchPattern);
@@ -67,19 +67,19 @@ public class FileCleanupService : IDisposable
                 {
                     string fileName = Path.GetFileName(filePath);
                     
-                    // Kiểm tra xem file có tag xóa không
+                    // Check if file has delete tag
                     long? deleteTimestamp = GetDeleteTimestamp(fileName);
                     
                     if (deleteTimestamp.HasValue && deleteTimestamp.Value <= currentTimestamp)
                     {
-                        // File đã hết hạn, xóa
+                        // File expired, delete
                         File.Delete(filePath);
                         System.Diagnostics.Debug.WriteLine($"Deleted expired file: {fileName}");
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Bỏ qua lỗi cho từng file
+                    // Ignore error for individual file
                     System.Diagnostics.Debug.WriteLine($"Error deleting file: {ex.Message}");
                 }
             }
@@ -91,10 +91,10 @@ public class FileCleanupService : IDisposable
     }
 
     /// <summary>
-    /// Kiểm tra xem file có tag xóa không và trả về thời gian xóa
+    /// Check if file has delete tag and return delete timestamp
     /// </summary>
-    /// <param name="fileName">Tên file</param>
-    /// <returns>Unix timestamp để xóa, hoặc null nếu không có tag</returns>
+    /// <param name="fileName">File name</param>
+    /// <returns>Unix timestamp for deletion, or null if no tag</returns>
     private static long? GetDeleteTimestamp(string fileName)
     {
         int tagIndex = fileName.IndexOf(DELETE_TAG_PREFIX);
@@ -103,7 +103,7 @@ public class FileCleanupService : IDisposable
 
         string timestampStr = fileName.Substring(tagIndex + DELETE_TAG_PREFIX.Length);
         
-        // Loại bỏ extension nếu có
+        // Remove extension if exists
         int dotIndex = timestampStr.IndexOf('.');
         if (dotIndex >= 0)
             timestampStr = timestampStr.Substring(0, dotIndex);
@@ -115,7 +115,7 @@ public class FileCleanupService : IDisposable
     }
 
     /// <summary>
-    /// Dừng service
+    /// Stop service
     /// </summary>
     public void Stop()
     {
@@ -123,7 +123,7 @@ public class FileCleanupService : IDisposable
     }
 
     /// <summary>
-    /// Bắt đầu service
+    /// Start service
     /// </summary>
     public void Start()
     {
@@ -131,7 +131,7 @@ public class FileCleanupService : IDisposable
     }
 
     /// <summary>
-    /// Buộc quét ngay lập tức
+    /// Force immediate cleanup
     /// </summary>
     public void ForceCleanup()
     {

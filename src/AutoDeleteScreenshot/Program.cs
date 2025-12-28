@@ -5,22 +5,22 @@ namespace AutoDeleteScreenshot;
 static class Program
 {
     /// <summary>
-    /// Entry point của ứng dụng
+    /// Application entry point
     /// </summary>
     [STAThread]
     static void Main()
     {
-        // Đặt process priority thấp để không ảnh hưởng đến các ứng dụng khác
+        // Set process priority to low to avoid impacting other applications
         try
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.BelowNormal;
         }
         catch
         {
-            // Ignore nếu không thể set priority
+            // Ignore if unable to set priority
         }
 
-        // Chỉ cho phép chạy 1 instance duy nhất
+        // Allow only one instance to run
         using var mutex = new Mutex(true, "AutoDeleteScreenshot_SingleInstance", out bool createdNew);
         if (!createdNew)
         {
@@ -33,10 +33,10 @@ static class Program
             return;
         }
 
-        // Khởi tạo Windows Forms
+        // Initialize Windows Forms
         ApplicationConfiguration.Initialize();
         
-        // Chạy ứng dụng với TrayApplicationContext
+        // Run application with TrayApplicationContext
         Application.Run(new TrayApplicationContext());
     }
 }

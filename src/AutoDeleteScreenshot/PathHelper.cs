@@ -15,7 +15,7 @@ public static class PathHelper
         out IntPtr ppszPath);
 
     /// <summary>
-    /// Khởi tạo PathHelper với SettingsManager
+    /// Initialize PathHelper with SettingsManager
     /// </summary>
     public static void Initialize(SettingsManager settingsManager)
     {
@@ -23,17 +23,17 @@ public static class PathHelper
     }
 
     /// <summary>
-    /// Lấy đường dẫn thư mục Screenshots (từ settings hoặc mặc định)
+    /// Get Screenshots folder path (from settings or default)
     /// </summary>
     public static string GetScreenshotsPath()
     {
-        // Ưu tiên path từ settings
+        // Prioritize path from settings
         if (_settingsManager != null && _settingsManager.HasScreenshotsPath)
         {
             return _settingsManager.ScreenshotsPath!;
         }
 
-        // Thử lấy từ Known Folder
+        // Try to get from Known Folder
         try
         {
             if (SHGetKnownFolderPath(KnownFolderScreenshots, 0, IntPtr.Zero, out IntPtr pPath) == 0)
@@ -52,12 +52,12 @@ public static class PathHelper
             // Ignore error
         }
 
-        // Fallback cuối cùng
+        // Final fallback
         return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Screenshots");
     }
 
     /// <summary>
-    /// Yêu cầu người dùng chọn folder Screenshots
+    /// Prompt user to select Screenshots folder
     /// </summary>
     public static string? PromptForFolder()
     {
@@ -68,7 +68,7 @@ public static class PathHelper
             ShowNewFolderButton = false
         };
 
-        // Thử set initial folder
+        // Try to set initial folder
         string currentPath = GetScreenshotsPath();
         if (Directory.Exists(currentPath))
         {
@@ -84,7 +84,7 @@ public static class PathHelper
     }
 
     /// <summary>
-    /// Lưu đường dẫn mới vào settings
+    /// Save new path to settings
     /// </summary>
     public static void SetScreenshotsPath(string path)
     {
