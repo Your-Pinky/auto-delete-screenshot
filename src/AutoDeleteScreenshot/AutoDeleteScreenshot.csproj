@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWindowsForms>true</UseWindowsForms>
+    
+    <!-- Build settings for lightweight exe -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>false</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    
+    <!-- App info -->
+    <AssemblyName>AutoDeleteScreenshot</AssemblyName>
+    <Version>1.0.0</Version>
+    <Authors>TungCorn</Authors>
+    <Description>Tự động xóa ảnh chụp màn hình sau khoảng thời gian được chọn</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
