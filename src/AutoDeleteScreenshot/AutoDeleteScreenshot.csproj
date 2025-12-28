@@ -20,9 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Resources\icon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="Resources\icon.png" />
   </ItemGroup>
 
 </Project>

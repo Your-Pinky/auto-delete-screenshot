@@ -155,39 +155,51 @@ public class TrayApplicationContext : ApplicationContext
     }
 
     /// <summary>
-    /// Load icon from file or create default
+    /// Load icon from Embedded Resource or create default
     /// </summary>
     private Icon LoadIcon()
     {
         try
         {
-            string iconPath = Path.Combine(AppContext.BaseDirectory, "Resources", "icon.png");
-            if (File.Exists(iconPath))
+            // Load from Embedded Resource
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            var resourceName = "AutoDeleteScreenshot.Resources.icon.png";
+            
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream != null)
             {
-                using var bitmap = new Bitmap(iconPath);
+                using var bitmap = new Bitmap(stream);
                 return Icon.FromHandle(bitmap.GetHicon());
             }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading icon: {ex.Message}");
+        }
         
         // Create default icon if loading fails
         return CreateDefaultIcon();
     }
 
     /// <summary>
-    /// Create default blue icon
+    /// Create default blue icon (High Resolution)
     /// </summary>
     private Icon CreateDefaultIcon()
     {
-        var bitmap = new Bitmap(16, 16);
+        // Create 64x64 icon for better scaling
+        var bitmap = new Bitmap(64, 64);
         using (var g = Graphics.FromImage(bitmap))
         {
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             g.Clear(Color.Transparent);
+            
             using var brush = new SolidBrush(Color.FromArgb(0, 120, 215)); // Windows blue
-            g.FillEllipse(brush, 1, 1, 14, 14);
+            g.FillEllipse(brush, 4, 4, 56, 56);
+            
             using var whiteBrush = new SolidBrush(Color.White);
-            g.FillRectangle(whiteBrush, 6, 4, 4, 5); // Clock hand
-            g.FillRectangle(whiteBrush, 6, 6, 5, 2); // Clock hand horizontal
+            // Clock hands
+            g.FillRectangle(whiteBrush, 28, 14, 8, 22); // Vertical
+            g.FillRectangle(whiteBrush, 28, 30, 20, 8); // Horizontal
         }
         return Icon.FromHandle(bitmap.GetHicon());
     }
