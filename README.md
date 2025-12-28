@@ -1,6 +1,6 @@
 # Auto Delete Screenshot
 
-A **super lightweight** (~150KB) and portable Windows utility that keeps your desktop clean by automatically deleting temporary screenshots. Designed for **zero impact** on system performance.
+A **super lightweight** and portable Windows utility that keeps your desktop clean by automatically deleting temporary screenshots. Designed for **zero impact** on system performance.
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-blue)
 ![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey)
@@ -12,7 +12,7 @@ A **super lightweight** (~150KB) and portable Windows utility that keeps your de
 
 ## Features
 
-- ⚡ **Super Lightweight** - Only ~150KB. Minimal RAM usage & 0% CPU idle.
+- ⚡ **Super Lightweight** - Minimal RAM usage & 0% CPU idle.
 - 🕐 **Auto-delete** screenshots after 15 min, 30 min, 1 hour, or 24 hours
 - 📂 **Custom folder** selection for monitoring
 - 🚀 **Run at startup** option
