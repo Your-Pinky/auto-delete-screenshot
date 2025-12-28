@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Docs:** Added a demo screenshot to `README.md` to showcase the application menu.
 
+### Changed
+- **Docs:** Refined `README.md` to use GitHub-style alerts (WARNING/TIP) for better visibility in the Troubleshooting section.
+- **Docs:** Generalized the description to "super lightweight" in `README.md` for improved accuracy.
+
 ## [1.0.2] - 2025-12-28
 
 ### Changed
