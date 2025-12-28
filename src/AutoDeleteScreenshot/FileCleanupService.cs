@@ -21,7 +21,8 @@ public class FileCleanupService : IDisposable
     /// <param name="intervalSeconds">Khoảng thời gian quét (giây), mặc định 60 giây</param>
     public FileCleanupService(int intervalSeconds = 60)
     {
-        _screenshotsPath = GetScreenshotsPath();
+        _screenshotsPath = PathHelper.GetScreenshotsPath();
+        System.Diagnostics.Debug.WriteLine($"Watching cleanup path: {_screenshotsPath}");
 
         // Tạo timer quét định kỳ
         _cleanupTimer = new Timer(intervalSeconds * 1000)
@@ -33,15 +34,6 @@ public class FileCleanupService : IDisposable
 
         // Quét ngay lập tức khi khởi động
         Task.Run(CleanupExpiredFiles);
-    }
-
-    /// <summary>
-    /// Lấy đường dẫn thư mục Screenshots
-    /// </summary>
-    private static string GetScreenshotsPath()
-    {
-        string picturesPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-        return Path.Combine(picturesPath, "Screenshots");
     }
 
     /// <summary>
@@ -64,8 +56,10 @@ public class FileCleanupService : IDisposable
 
             long currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-            // Lấy tất cả file trong thư mục
-            var files = Directory.GetFiles(_screenshotsPath, "*.png");
+            // CHỈ lấy các file có tag xóa -> TỐI ƯU HIỆU SUẤT
+            // Pattern: *{DELETE_TAG_PREFIX}*.png
+            string searchPattern = $"*{DELETE_TAG_PREFIX}*.png";
+            var files = Directory.GetFiles(_screenshotsPath, searchPattern);
 
             foreach (var filePath in files)
             {

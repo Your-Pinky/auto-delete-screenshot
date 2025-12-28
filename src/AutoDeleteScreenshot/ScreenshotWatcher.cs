@@ -23,8 +23,9 @@ public class ScreenshotWatcher : IDisposable
         _getDeleteAfterMinutes = getDeleteAfterMinutes;
         _onNewScreenshot = onNewScreenshot;
 
-        // Đường dẫn thư mục Screenshots mặc định của Windows
-        string screenshotsPath = GetScreenshotsPath();
+        // Đường dẫn thư mục Screenshots chính xác từ Registry
+        string screenshotsPath = PathHelper.GetScreenshotsPath();
+        System.Diagnostics.Debug.WriteLine($"Watching screenshots path: {screenshotsPath}");
 
         // Đảm bảo thư mục tồn tại
         if (!Directory.Exists(screenshotsPath))
@@ -40,15 +41,6 @@ public class ScreenshotWatcher : IDisposable
         };
 
         _watcher.Created += OnFileCreated;
-    }
-
-    /// <summary>
-    /// Lấy đường dẫn thư mục Screenshots
-    /// </summary>
-    private static string GetScreenshotsPath()
-    {
-        string picturesPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-        return Path.Combine(picturesPath, "Screenshots");
     }
 
     /// <summary>
