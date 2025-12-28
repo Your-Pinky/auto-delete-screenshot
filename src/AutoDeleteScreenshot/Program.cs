@@ -36,12 +36,7 @@ static class Program
         // Khởi tạo Windows Forms
         ApplicationConfiguration.Initialize();
         
-        // TODO: Sẽ thay bằng TrayApplicationContext ở branch tiếp theo
-        MessageBox.Show(
-            "Auto Delete Screenshot - Project Setup Complete!\n\nỨng dụng sẽ chạy ở System Tray.",
-            "Auto Delete Screenshot",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information
-        );
+        // Chạy ứng dụng với TrayApplicationContext
+        Application.Run(new TrayApplicationContext());
     }
 }
