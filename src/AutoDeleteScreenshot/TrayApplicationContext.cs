@@ -81,6 +81,14 @@ public class TrayApplicationContext : ApplicationContext
         var folderItem = new ToolStripMenuItem("📂 Chọn thư mục Screenshots...", null, OnSelectFolder);
         _contextMenu.Items.Add(folderItem);
         
+        // Khởi động cùng Windows
+        var startupItem = new ToolStripMenuItem("🚀 Khởi động cùng Windows", null, OnStartupChanged)
+        {
+            CheckOnClick = true,
+            Checked = StartupManager.IsEnabled()
+        };
+        _contextMenu.Items.Add(startupItem);
+        
         _contextMenu.Items.Add(new ToolStripSeparator());
         
         // Nút thoát
@@ -216,6 +224,54 @@ public class TrayApplicationContext : ApplicationContext
     private void OnSelectFolder(object? sender, EventArgs e)
     {
         PromptForScreenshotsFolder();
+    }
+
+    /// <summary>
+    /// Xử lý khi thay đổi cài đặt khởi động cùng Windows
+    /// </summary>
+    private void OnStartupChanged(object? sender, EventArgs e)
+    {
+        if (sender is ToolStripMenuItem item)
+        {
+            bool success;
+            if (item.Checked)
+            {
+                success = StartupManager.Enable();
+                if (success)
+                {
+                    _trayIcon.ShowBalloonTip(
+                        2000,
+                        "🚀 Đã bật",
+                        "Ứng dụng sẽ khởi động cùng Windows",
+                        ToolTipIcon.Info
+                    );
+                }
+            }
+            else
+            {
+                success = StartupManager.Disable();
+                if (success)
+                {
+                    _trayIcon.ShowBalloonTip(
+                        2000,
+                        "🚀 Đã tắt",
+                        "Ứng dụng sẽ không khởi động cùng Windows",
+                        ToolTipIcon.Info
+                    );
+                }
+            }
+
+            if (!success)
+            {
+                item.Checked = !item.Checked; // Revert checkbox nếu lỗi
+                MessageBox.Show(
+                    "Không thể thay đổi cài đặt khởi động.\nHãy thử chạy ứng dụng với quyền Administrator.",
+                    "Lỗi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
+        }
     }
 
     /// <summary>
