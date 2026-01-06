@@ -39,7 +39,7 @@ Download and install **.NET 8.0 Desktop Runtime** (or newer):
 > **Note:** .NET 9.x or higher will also work.
 
 ### Step 3: Download & Run
-1. Download `AutoDeleteScreenshot.exe` from [Latest Release](https://github.com/TungCorn/auto-delete-screenshot/releases/latest)
+1. Download `AutoDeleteScreenshot.exe` from [Latest Release](https://github.com/tungcorn/auto-delete-screenshot/releases/latest)
 2. Double-click to run
 3. **Important:** On first launch, right-click the tray icon and choose **"📂 Select Screenshots folder..."** to tell the app where your screenshots are saved.
 4. The app will appear in your system tray (bottom-right corner)
@@ -83,7 +83,7 @@ Only files with `_AUTODEL_` tag are deleted. Your other files are **100% safe**.
 ## Build from Source
 
 ```bash
-git clone https://github.com/TungCorn/auto-delete-screenshot.git
+git clone https://github.com/tungcorn/auto-delete-screenshot.git
 cd auto-delete-screenshot/src/AutoDeleteScreenshot
 dotnet publish -c Release -r win-x64 --self-contained false /p:PublishSingleFile=true
 ```
@@ -109,10 +109,10 @@ Output: `bin/Release/net8.0-windows/win-x64/publish/AutoDeleteScreenshot.exe`
 ## Author
 
 <div align="center">
-  <h3>TungCorn</h3>
+  <h3>tungcorn</h3>
   
   <p>
-    <a href="https://github.com/TungCorn">GitHub</a>
+    <a href="https://github.com/tungcorn">GitHub</a>
     &nbsp; • &nbsp;
     <a href="https://t.me/corn05">Telegram</a>
   </p>
