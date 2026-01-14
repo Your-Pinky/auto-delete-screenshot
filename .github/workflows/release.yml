@@ -47,7 +47,16 @@ jobs:
           $version = "${{ steps.version.outputs.VERSION }}"
           $changelog = Get-Content CHANGELOG.md -Raw
           
-          # Match section for this version (e.g., ## [1.0.6] - 2025-01-14)
+          # Match heading line to extract title (e.g., ## [1.0.6] - 2025-01-14 - Title Here)
+          $headingPattern = "## \[$version\] - [\d-]+(?: - (.+))?"
+          if ($changelog -match $headingPattern) {
+            $title = if ($matches[1]) { $matches[1].Trim() } else { "" }
+          } else {
+            $title = ""
+          }
+          echo "TITLE=$title" >> $env:GITHUB_OUTPUT
+          
+          # Match section content for this version
           $pattern = "(?s)## \[$version\][^\r\n]*\r?\n(.*?)(?=\r?\n## \[|$)"
           
           if ($changelog -match $pattern) {
@@ -64,7 +73,7 @@ jobs:
       - name: Create Pre-Release
         uses: softprops/action-gh-release@v2
         with:
-          name: v${{ steps.version.outputs.VERSION }}
+          name: v${{ steps.version.outputs.VERSION }}${{ steps.changelog.outputs.TITLE && format(' - {0}', steps.changelog.outputs.TITLE) || '' }}
           body: |
             ${{ steps.changelog.outputs.NOTES }}
             

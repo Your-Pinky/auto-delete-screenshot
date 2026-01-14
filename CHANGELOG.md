@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.6] - 2025-01-14
+## [1.0.6] - 2025-01-14 - Improved First-Run Experience
 
 ### Added
 - **Feature:** Added "Create Desktop shortcut" option in the menu and first-run setup wizard.
