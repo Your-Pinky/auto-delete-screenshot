@@ -11,9 +11,10 @@ public class TrayApplicationContext : ApplicationContext
     extern static bool DestroyIcon(IntPtr handle);
     private readonly NotifyIcon _trayIcon;
     private readonly ContextMenuStrip _contextMenu;
-    private readonly ScreenshotWatcher _screenshotWatcher;
-    private readonly FileCleanupService _fileCleanupService;
+    private ScreenshotWatcher? _screenshotWatcher;
+    private FileCleanupService? _fileCleanupService;
     private readonly SettingsManager _settingsManager;
+    private bool _isFirstRun;
     
     // Menu items for deletion time
     private readonly ToolStripMenuItem _menuNoDelete;
@@ -33,15 +34,10 @@ public class TrayApplicationContext : ApplicationContext
         _settingsManager = new SettingsManager();
         _deleteAfterMinutes = _settingsManager.DeleteAfterMinutes;
         _showToast = _settingsManager.ShowToast;
+        _isFirstRun = !_settingsManager.HasScreenshotsPath;
         
         // Initialize PathHelper with settings
         PathHelper.Initialize(_settingsManager);
-        
-        // Check if folder is selected, if not prompt to select
-        if (!_settingsManager.HasScreenshotsPath)
-        {
-            PromptForScreenshotsFolder();
-        }
         
         // Create context menu
         _contextMenu = new ContextMenuStrip();
@@ -83,6 +79,10 @@ public class TrayApplicationContext : ApplicationContext
         var folderItem = new ToolStripMenuItem("📂 Select Screenshots folder...", null, OnSelectFolder);
         _contextMenu.Items.Add(folderItem);
         
+        // Create Desktop shortcut
+        var shortcutItem = new ToolStripMenuItem("📌 Create Desktop shortcut", null, OnCreateShortcut);
+        _contextMenu.Items.Add(shortcutItem);
+        
         // Run at startup
         var startupItem = new ToolStripMenuItem("🚀 Run at Windows startup", null, OnStartupChanged)
         {
@@ -119,6 +119,91 @@ public class TrayApplicationContext : ApplicationContext
         };
         
         UpdateMenuCheckmarks();
+        
+        // Check if folder is selected, if not prompt to select (first run)
+        if (_isFirstRun)
+        {
+            // Defer first run setup to after tray icon is shown
+            var context = SynchronizationContext.Current;
+            Task.Run(async () =>
+            {
+                await Task.Delay(500); // Wait for tray icon to appear
+                context?.Post(_ => RunFirstTimeSetup(), null);
+            });
+        }
+        else
+        {
+            // Initialize services with existing path
+            InitializeServices();
+        }
+    }
+    
+    /// <summary>
+    /// First time setup wizard
+    /// </summary>
+    private void RunFirstTimeSetup()
+    {
+        // Step 1: Select folder
+        PromptForScreenshotsFolder();
+        
+        if (!_settingsManager.HasScreenshotsPath)
+        {
+            // User cancelled, show warning
+            MessageBox.Show(
+                "You need to select a Screenshots folder for the app to work.\n\nRight-click the icon and select 'Select Screenshots folder...'",
+                "Auto Delete Screenshot",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+            );
+            return;
+        }
+        
+        // Step 2: Ask to create Desktop shortcut
+        if (!ShortcutManager.Exists())
+        {
+            var result = MessageBox.Show(
+                "Would you like to create a Desktop shortcut for easy access?",
+                "Auto Delete Screenshot - Setup",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+            
+            if (result == DialogResult.Yes)
+            {
+                if (ShortcutManager.Create())
+                {
+                    _trayIcon.ShowBalloonTip(
+                        2000,
+                        "📌 Shortcut Created",
+                        "Desktop shortcut has been created",
+                        ToolTipIcon.Info
+                    );
+                }
+            }
+        }
+        
+        // Initialize services after setup
+        InitializeServices();
+        
+        _trayIcon.ShowBalloonTip(
+            3000,
+            "✅ Setup Complete",
+            "Auto Delete Screenshot is ready to use!",
+            ToolTipIcon.Info
+        );
+    }
+    
+    /// <summary>
+    /// Initialize or reinitialize services
+    /// </summary>
+    private void InitializeServices()
+    {
+        if (!_settingsManager.HasScreenshotsPath)
+            return;
+            
+        // Dispose old services if exists
+        _screenshotWatcher?.Dispose();
+        _fileCleanupService?.Dispose();
         
         // Initialize ScreenshotWatcher
         _screenshotWatcher = new ScreenshotWatcher(
@@ -251,7 +336,58 @@ public class TrayApplicationContext : ApplicationContext
     /// </summary>
     private void OnSelectFolder(object? sender, EventArgs e)
     {
-        PromptForScreenshotsFolder();
+        string? selectedPath = PathHelper.PromptForFolder();
+        
+        if (!string.IsNullOrEmpty(selectedPath))
+        {
+            PathHelper.SetScreenshotsPath(selectedPath);
+            
+            _trayIcon.ShowBalloonTip(
+                3000,
+                "📂 Folder Selected",
+                $"Watching: {selectedPath}",
+                ToolTipIcon.Info
+            );
+            
+            // Reinitialize services with new path
+            InitializeServices();
+        }
+    }
+    
+    /// <summary>
+    /// Handle create shortcut menu click
+    /// </summary>
+    private void OnCreateShortcut(object? sender, EventArgs e)
+    {
+        if (ShortcutManager.Exists())
+        {
+            MessageBox.Show(
+                "Desktop shortcut already exists!",
+                "Auto Delete Screenshot",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
+            return;
+        }
+        
+        if (ShortcutManager.Create())
+        {
+            _trayIcon.ShowBalloonTip(
+                2000,
+                "📌 Shortcut Created",
+                "Desktop shortcut has been created",
+                ToolTipIcon.Info
+            );
+        }
+        else
+        {
+            MessageBox.Show(
+                "Failed to create Desktop shortcut.",
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
+        }
     }
 
     /// <summary>
@@ -303,7 +439,7 @@ public class TrayApplicationContext : ApplicationContext
     }
 
     /// <summary>
-    /// Show folder selection dialog
+    /// Show folder selection dialog (used for first run)
     /// </summary>
     private void PromptForScreenshotsFolder()
     {
@@ -312,46 +448,10 @@ public class TrayApplicationContext : ApplicationContext
         if (!string.IsNullOrEmpty(selectedPath))
         {
             PathHelper.SetScreenshotsPath(selectedPath);
-            
-            _trayIcon.ShowBalloonTip(
-                3000,
-                "📂 Folder Selected",
-                $"Watching: {selectedPath}",
-                ToolTipIcon.Info
-            );
-            
-            // Restart services to apply new path
-            RestartServices();
-        }
-        else if (!_settingsManager.HasScreenshotsPath)
-        {
-            // Show warning if no path selected
-            MessageBox.Show(
-                "You need to select a Screenshots folder for the app to work.\n\nRight-click the icon and select 'Select Screenshots folder...'",
-                "Auto Delete Screenshot",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            );
         }
     }
 
-    /// <summary>
-    /// Restart services after folder change
-    /// </summary>
-    private void RestartServices()
-    {
-        // Dispose old services
-        _screenshotWatcher?.Dispose();
-        _fileCleanupService?.Dispose();
-        
-        // Show restart required message
-        MessageBox.Show(
-            "Please restart the application to apply the new folder.",
-            "Restart Required",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information
-        );
-    }
+
 
     /// <summary>
     /// Update checkmarks for menu items

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.6] - 2025-01-14
+
+### Added
+- **Feature:** Added "Create Desktop shortcut" option in the menu and first-run setup wizard.
+- **UX:** First-run wizard now asks to create Desktop shortcut for easy access.
+
+### Changed
+- **UX:** Removed restart requirement after selecting Screenshots folder - app now applies changes immediately.
+- **UX:** Improved first-launch experience with a seamless setup flow.
+
 ## [1.0.5] - 2025-12-29
 
 ### Changed
