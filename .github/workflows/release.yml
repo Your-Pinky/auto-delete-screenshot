@@ -52,14 +52,14 @@ jobs:
           
           if ($changelog -match $pattern) {
             $notes = $matches[1].Trim()
-            # Escape for GitHub Actions
-            $notes = $notes -replace '%', '%25'
-            $notes = $notes -replace "`n", '%0A'
-            $notes = $notes -replace "`r", '%0D'
-            echo "NOTES=$notes" >> $env:GITHUB_OUTPUT
           } else {
-            echo "NOTES=No changelog entry found for v$version" >> $env:GITHUB_OUTPUT
+            $notes = "No changelog entry found for v$version"
           }
+          
+          # Use heredoc for multiline output
+          "NOTES<<EOF" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          $notes | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "EOF" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
       
       - name: Create Pre-Release
         uses: softprops/action-gh-release@v2
